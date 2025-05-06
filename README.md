@@ -14,7 +14,6 @@ This module is designed to be used with an existing IAM Identity Center instance
     * Create permission sets with specified session durations.
     * Attach AWS managed IAM policies to permission sets.
     * Define and attach custom inline IAM policies to permission sets.
-    * Tag permission sets.
 * **Account Assignments:** Assign groups to permission sets on specified AWS accounts within your organization.
 * **Data-Driven Configuration:** Leverages local variables in your root module for defining users, groups, target accounts, and complex assignment rules.
 * **Reusable and Modular:** Designed to be invoked as a child module, promoting clean infrastructure-as-code practices.
@@ -24,7 +23,7 @@ This module is designed to be used with an existing IAM Identity Center instance
 1.  **AWS Organization:** An existing AWS Organization.
 2.  **IAM Identity Center Enabled:** IAM Identity Center must be enabled, preferably with a delegated administrator account configured.
 3.  **Delegated Administrator Credentials:** Terraform must be run with credentials that have permissions to manage IAM Identity Center. This typically means running Terraform from, or assuming a role in, the IAM Identity Center delegated administrator account. Necessary permissions include `ssoadmin:*` and `identitystore:*`.
-4.  **Terraform:** Terraform v1.0.0 or later.
+4.  **Terraform:** Terraform v1.5.0 or later.
 5.  **AWS Provider:** AWS Provider v5.0 or later configured in your root module.
 
 ## Module Structure
