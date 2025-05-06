@@ -26,19 +26,19 @@ locals {
   groups = {
     "SoftwareEngineers" = {
       description = "Software development team"
-      members = []
+      members = ["liam.westbrook", "ava.hartley"]
     },
     "InfoSec" = {
       description = "Information Security team"
-      members = []
+      members = ["noah.caldwell", "maya.dresden"]
     },
     "InfraEngineers" = {
       description = "DevOps Engineers team"
-      members = []
+      members = ["ethan.sommer", "zoe.langford"]
     },
     "ReadOnlyUsers" = {
       description = "Users with global read-only permissions"
-      members = []
+      members = ["maya.dresden", "liam.westbrook"]
     }
   }
 
@@ -71,8 +71,8 @@ locals {
   # Define assignment rules (Group -> Permission set -> Accounts)
   assignments = [
     # --- SoftwareEngineers assignments ---
-    { group_name = "SoftwareEngineers", permission_set_name = "PowerUserAccess", account_keys = ["dev", "shared"] },
-    { group_name = "SoftwareEngineers", permission_set_name = "ViewOnlyAccess", account_keys = ["prod"] },
+    { group_name = "SoftwareEngineers", permission_set_name = "AdministratorAccess", account_keys = ["dev"] },
+    { group_name = "SoftwareEngineers", permission_set_name = "PowerUserAccess", account_keys = ["prod", "shared"] },
 
     # --- InfoSec assignments ---
     { group_name = "InfoSec", permission_set_name = "AdministratorAccess", account_keys = ["sec"] },
