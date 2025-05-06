@@ -63,6 +63,23 @@ resource "aws_ssoadmin_managed_policy_attachment" "aws_managed" {
   managed_policy_arn = "arn:aws:iam::aws:policy/${local.permission_sets_aws_managed[each.key].aws_managed_policy}" # Use the policy name from config
 }
 
+resource "aws_ssoadmin_permission_set" "aws_managed_job_function" {
+  for_each = local.permission_sets_aws_managed_job_function
+
+  name             = each.key
+  description      = each.value.description
+  instance_arn     = local.instance_arn
+  session_duration = each.value.session_duration
+}
+
+resource "aws_ssoadmin_managed_policy_attachment" "aws_managed_job_function" {
+  for_each = aws_ssoadmin_permission_set.aws_managed_job_function
+
+  instance_arn       = local.instance_arn
+  permission_set_arn = each.value.arn
+  managed_policy_arn = "arn:aws:iam::aws:policy/job-function/${local.permission_sets_aws_managed_job_function[each.key].aws_managed_job_function_policy}" # Job function policies have different ARN style
+}
+
 # Create permission sets using inline policies
 resource "aws_ssoadmin_permission_set" "inline" {
   for_each = local.permission_sets_aws_inline

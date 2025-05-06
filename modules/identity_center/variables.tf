@@ -40,10 +40,11 @@ variable "assignments" {
 
 variable "permission_sets_config" {
   type = map(object({
-    description        = optional(string, "Managed by Terraform")
-    session_duration   = optional(string, "PT4H") # Default 4 hours
-    aws_managed_policy = optional(string)         # Name of AWS Managed policy, for example AdministratorAccess
-    inline_policy      = optional(string)         # JSON string of inline policy
+    description                     = optional(string, "Managed by Terraform")
+    session_duration                = optional(string, "PT4H") # Default 4 hours
+    aws_managed_policy              = optional(string)         # Name of AWS Managed policy, for example AdministratorAccess
+    aws_managed_job_function_policy = optional(string)         # Name of AWS Managed job function policy, for example ViewOnlyAccess
+    inline_policy                   = optional(string)         # JSON string of inline policy
     # customer_managed_policies = optional(list(string)) # ARNs of customer managed policies
   }))
   description = "Configuration for the permission sets to create. Key is the permission set name used in assignments"

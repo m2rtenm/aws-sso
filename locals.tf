@@ -26,39 +26,39 @@ locals {
   groups = {
     "SoftwareEngineers" = {
       description = "Software development team"
-      members = ["liam.westbrook", "ava.hartley"]
+      members     = ["liam.westbrook", "ava.hartley"]
     },
     "InfoSec" = {
       description = "Information Security team"
-      members = ["noah.caldwell", "maya.dresden"]
+      members     = ["noah.caldwell", "maya.dresden"]
     },
     "InfraEngineers" = {
       description = "DevOps Engineers team"
-      members = ["ethan.sommer", "zoe.langford"]
+      members     = ["ethan.sommer", "zoe.langford"]
     },
     "ReadOnlyUsers" = {
       description = "Users with global read-only permissions"
-      members = ["maya.dresden", "liam.westbrook"]
+      members     = ["maya.dresden", "liam.westbrook"]
     }
   }
 
   # Define permission sets to create via module
   # Key = Permission set name used in assignments below
   permission_sets_config = {
-    # Using AWS Managed policies
-    "AdministratorAccess" = {
-      description = "Grants AWS AdministratorAccess"
+    # Using AWS Managed and job function policies
+    "AdministratorAccess-ps" = {
+      description        = "Grants AWS AdministratorAccess"
       aws_managed_policy = "AdministratorAccess" # Exact name of AWS Managed policy
-      session_duration = "PT2H" # Optional: Override default session duration
+      session_duration   = "PT2H"                # Optional: Override default session duration
     }
-    "PowerUserAccess" = {
-      description = "Grants AWS PowerUserAccess"
+    "PowerUserAccess-ps" = {
+      description        = "Grants AWS PowerUserAccess"
       aws_managed_policy = "PowerUserAccess"
     }
-    "ViewOnlyAccess" = {
-      description = "Grants AWS ViewOnlyAccess"
-      aws_managed_policy = "ViewOnlyAccess"
-      session_duration = "PT12H"
+    "ViewOnlyAccess-ps" = {
+      description                     = "Grants AWS ViewOnlyAccess"
+      aws_managed_job_function_policy = "ViewOnlyAccess"
+      session_duration                = "PT12H"
     }
     # Example: Custom Inline policy Permission set (Optional)
     #"CustomS3Writer" = {
@@ -71,19 +71,19 @@ locals {
   # Define assignment rules (Group -> Permission set -> Accounts)
   assignments = [
     # --- SoftwareEngineers assignments ---
-    { group_name = "SoftwareEngineers", permission_set_name = "AdministratorAccess", account_keys = ["dev"] },
-    { group_name = "SoftwareEngineers", permission_set_name = "PowerUserAccess", account_keys = ["prod", "shared"] },
+    { group_name = "SoftwareEngineers", permission_set_name = "AdministratorAccess-ps", account_keys = ["dev"] },
+    { group_name = "SoftwareEngineers", permission_set_name = "PowerUserAccess-ps", account_keys = ["prod", "shared"] },
 
     # --- InfoSec assignments ---
-    { group_name = "InfoSec", permission_set_name = "AdministratorAccess", account_keys = ["sec"] },
-    { group_name = "InfoSec", permission_set_name = "ViewOnlyAccess", account_keys = ["dev", "prod", "shared"] },
+    { group_name = "InfoSec", permission_set_name = "AdministratorAccess-ps", account_keys = ["sec"] },
+    { group_name = "InfoSec", permission_set_name = "ViewOnlyAccess-ps", account_keys = ["dev", "prod", "shared"] },
 
     # --- InfraEngineers assignments ---
     # Apply to all accounts defined in target_accounts using keys()
-    { group_name = "InfraEngineers", permission_set_name = "AdministratorAccess", account_keys = keys(local.target_accounts) },
+    { group_name = "InfraEngineers", permission_set_name = "AdministratorAccess-ps", account_keys = keys(local.target_accounts) },
 
     # --- ReadOnlyUsers assignments ---
     # Apply to all accounts defined in target_accounts using keys()
-    { group_name = "ReadOnlyUsers", permission_set_name = "ViewOnlyAccess", account_keys = keys(local.target_accounts) }
+    { group_name = "ReadOnlyUsers", permission_set_name = "ViewOnlyAccess-ps", account_keys = keys(local.target_accounts) }
   ]
 }

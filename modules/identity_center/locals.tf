@@ -28,22 +28,28 @@ locals {
     ]
   ])
 
-  # Prepare permission sets that use AWS managed policies
+  # Prepare permission sets that use AWS managed and job function policies
   permission_sets_aws_managed = {
     for name, config in var.permission_sets_config : name => config
-    if config.aws_managed_policy != null && config.inline_policy == null
+    if config.aws_managed_policy != null && config.inline_policy == null && config.aws_managed_job_function_policy == null
+  }
+
+  permission_sets_aws_managed_job_function = {
+    for name, config in var.permission_sets_config : name => config
+    if config.aws_managed_job_function_policy != null && config.aws_managed_policy == null && config.inline_policy == null
   }
 
   # Prepare permission sets that use inline policies
   permission_sets_aws_inline = {
     for name, config in var.permission_sets_config : name => config
-    if config.inline_policy != null && config.aws_managed_policy == null
+    if config.inline_policy != null && config.aws_managed_policy == null && config.aws_managed_job_function_policy == null
   }
 
   # Combine all created permission set ARNs for easier lookup in assignments
   all_permission_set_arns = merge(
     { for name, ps in aws_ssoadmin_permission_set.aws_managed : name => ps.arn },
-    { for name, ps in aws_ssoadmin_permission_set.inline : name => ps.arn }
+    { for name, ps in aws_ssoadmin_permission_set.inline : name => ps.arn },
+    { for name, ps in aws_ssoadmin_permission_set.aws_managed_job_function : name => ps.arn }
     # Add other types here if implementing customer managed policies etc.
   )
 }
